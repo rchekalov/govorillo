@@ -111,10 +111,14 @@ public class HTTPPullService extends Service {
             if (isRecording) {
                 Log.d(LOG_TAG, "I stop");
                 stopService(GovorilloListenerService);
+
+                isRecording = false;
             }
             if (isPlaying) {
                 Log.d(LOG_TAG, "I stop");
                 stopService(MediaPlayerIntent);
+
+                isPlaying = false;
             }
         } else if (resUpper.contains("PLAY")) {
             String audio_url = response.replace("PLAY ", "");
