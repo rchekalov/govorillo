@@ -46,14 +46,16 @@ public class GovorilloListener implements RecognizerListener {
 
     @Override
     public void onPartialResults(Recognizer recognizer, Recognition recognition, boolean b) {
-        Log.d(LOG_TAG, "onPartialResults");
+        Log.d(LOG_TAG, "PartialRESULT");
+        Log.d(LOG_TAG, recognition.getBestResultText());
+        AsyncTask<String, Void, String> execute = new AsyncPost(this).execute(Singleton.getInstance().getUrl()+ "listen", recognition.getBestResultText());
     }
 
     @Override
     public void onRecognitionDone(Recognizer recognizer, Recognition recognition) {
         Log.d(LOG_TAG, "RESULT");
         Log.d(LOG_TAG, recognition.getBestResultText());
-        AsyncTask<String, Void, String> execute = new AsyncPost(this).execute(Singleton.getInstance().getUrl()+ "/listen", recognition.getBestResultText());
+        AsyncTask<String, Void, String> execute = new AsyncPost(this).execute(Singleton.getInstance().getUrl()+ "listen", recognition.getBestResultText());
     }
 
     @Override
