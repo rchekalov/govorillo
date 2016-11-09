@@ -26,7 +26,7 @@
         android:ems="10"
         android:id="@+id/editAdress"
         android:hint="url"
-        android:text="http://jtyjcrlmhl.localtunnel.me/"
+        android:text=""
         android:layout_marginTop="10dp"
         android:layout_below="@+id/onOff"
         android:layout_alignParentRight="true"
