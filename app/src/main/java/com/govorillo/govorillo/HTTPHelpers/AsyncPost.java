@@ -1,8 +1,10 @@
 package com.govorillo.govorillo.HTTPHelpers;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.govorillo.govorillo.Recognition.GovorilloListener;
+import com.govorillo.govorillo.Singleton;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AsyncPost extends AsyncTask<String, Void, String> {
+    private String LOG_TAG = "govorillo_debug";
 
     public AsyncPost(GovorilloListener context) {
         super();
@@ -37,17 +40,20 @@ public class AsyncPost extends AsyncTask<String, Void, String> {
     public void sendSpeech(String url, String speech) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("speech", speech));
-        params.add(new BasicNameValuePair("client_id", "клиент"));
+        params.add(new BasicNameValuePair("client_id", Singleton.getInstance().getDeviceId()));
         try {
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
             httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
             httpClient.execute(httpPost);
         } catch (UnsupportedEncodingException e) {
+            Log.d(LOG_TAG, e.toString());
             e.printStackTrace();
         } catch (ClientProtocolException e) {
+            Log.d(LOG_TAG, e.toString());
             e.printStackTrace();
         } catch (IOException e) {
+            Log.d(LOG_TAG, e.toString());
             e.printStackTrace();
         }
     }

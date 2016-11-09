@@ -7,6 +7,7 @@ public class Singleton {
     private String url;
     private String mp3Url;
     private int seconds;
+    private String deviceId;
 
     private Singleton(){
         url = "";
@@ -42,5 +43,13 @@ public class Singleton {
 
     public void setPlayUrl(String value) {
         mp3Url = value;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String value) {
+        deviceId = value;
     }
 }

@@ -1,8 +1,10 @@
 package com.govorillo.govorillo.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -23,11 +25,15 @@ public class MainActivity extends AppCompatActivity {
         final EditText editSec = (EditText) findViewById(R.id.editSec);
         final Switch onOff = (Switch) findViewById(R.id.onOff);
 
+        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        final String deviceId = telephonyManager.getDeviceId();
+
         onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    Singleton.getInstance().setDeviceId(deviceId);
                     Singleton.getInstance().setUrl(String.valueOf(editAdress.getText()));
                     Singleton.getInstance().setSeconds(Integer.valueOf(String.valueOf(editSec.getText())));
                     startService(httpPullIntent);
