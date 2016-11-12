@@ -10,13 +10,13 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.govorillo.govorillo.Recognition.GovorilloListener;
+import com.govorillo.govorillo.Singleton;
 
 import ru.yandex.speechkit.Recognizer;
 import ru.yandex.speechkit.SpeechKit;
 
 public class GovorilloRecognitionService extends Service {
     private String LOG_TAG = "govorillo_debug";
-    private static final String API_KEY = "";
     Recognizer recognizer;
 
     @Nullable
@@ -28,6 +28,7 @@ public class GovorilloRecognitionService extends Service {
 
     @Override
     public void onCreate() {
+        final String API_KEY = Singleton.getInstance().getSpeechKitToken();
         SpeechKit.getInstance().configure(getApplicationContext(), API_KEY);
     }
 
@@ -42,6 +43,7 @@ public class GovorilloRecognitionService extends Service {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            Log.d(LOG_TAG, "OH, NO! NO PERMISIONS!");
             return START_NOT_STICKY;
         }
         recognizer.start();
@@ -54,4 +56,3 @@ public class GovorilloRecognitionService extends Service {
         recognizer.finishRecording();
     }
 }
-

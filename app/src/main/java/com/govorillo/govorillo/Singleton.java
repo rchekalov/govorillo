@@ -8,6 +8,8 @@ public class Singleton {
     private String mp3Url;
     private int seconds;
     private String deviceId;
+    private String SpeechKitToken;
+    private boolean isSpeakBlocking = true;
 
     private Singleton(){
         url = "";
@@ -51,5 +53,21 @@ public class Singleton {
 
     public void setDeviceId(String value) {
         deviceId = value;
+    }
+
+    public String getSpeechKitToken() {
+        return SpeechKitToken;
+    }
+
+    public void setSpeechKitToken(String value) {
+        SpeechKitToken = value;
+    }
+
+    public boolean getSpeakBlocking() {
+        return isSpeakBlocking;
+    }
+
+    public void setSpeakBlocking(boolean value) {
+        isSpeakBlocking = value;
     }
 }

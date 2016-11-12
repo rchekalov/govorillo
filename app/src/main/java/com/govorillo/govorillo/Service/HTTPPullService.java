@@ -4,14 +4,15 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
 import com.govorillo.govorillo.HTTPHelpers.SyncGet;
 import com.govorillo.govorillo.Recognition.GovorilloRecognitionService;
 import com.govorillo.govorillo.Singleton;
 
+import java.util.HashMap;
 import java.util.Locale;
-
 
 public class HTTPPullService extends Service {
     private String LOG_TAG = "govorillo_debug";
@@ -21,6 +22,8 @@ public class HTTPPullService extends Service {
     TextToSpeech textToSpeech;
     public boolean isRecording = false;
     public boolean isPlaying = false;
+    public boolean isSpeaking = false;
+    public boolean isBlocking = false;
 
     public HTTPPullService() {
     }
@@ -32,7 +35,6 @@ public class HTTPPullService extends Service {
 
     @Override
     public void onCreate() {
-
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -61,32 +63,54 @@ public class HTTPPullService extends Service {
             }
         });
 
+        textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String s) {
+                isSpeaking = true;
+            }
+
+            @Override
+            public void onDone(String s) {
+                isSpeaking = false;
+            }
+
+            @Override
+            public void onError(String s) {
+                isSpeaking = false;
+            }
+        });
+
         Log.d(LOG_TAG, "Start Service");
 
         if (isRunning == false) {
             isRunning = true;
+            isBlocking = Singleton.getInstance().getSpeakBlocking();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while (isRunning) {
+                while (isRunning) {
+                    try {
+                        Thread.sleep(secondsOfSleep);
+                    } catch (Exception e) {
+                        Log.d(LOG_TAG, e.toString());
+                    }
+                    if (isRunning) {
                         try {
-                            Thread.sleep(secondsOfSleep);
-                        } catch (Exception e) {
-                            Log.d(LOG_TAG, e.toString());
-                        }
-                        if (isRunning) {
-                            try {
+                            if (isSpeaking == false || isBlocking == false) {
                                 String response = SyncGet.sendGet(url);
                                 runCommand(response, RecognitionServiceIntent, MediaPlayerIntent);
                                 Log.d(LOG_TAG, response);
-
-                            } catch (Exception e) {
-                                Log.d(LOG_TAG, e.toString());
+                                Log.d(LOG_TAG, "get http");
+                            } else {
+                                Log.d(LOG_TAG, "speaking");
                             }
-                            Log.d(LOG_TAG, "get http");
+
+                        } catch (Exception e) {
+                            Log.d(LOG_TAG, e.toString());
                         }
                     }
-                    stopSelf();
+                }
+                stopSelf();
                 }
             }).start();
         } else {
@@ -98,8 +122,11 @@ public class HTTPPullService extends Service {
     public void runCommand(String response, Intent GovorilloListenerService, Intent MediaPlayerIntent) {
         String resUpper = response.toUpperCase();
         if (resUpper.contains("SAY")) {
-            resUpper = resUpper.replace("SAY ", "");
-            textToSpeech.speak(resUpper, TextToSpeech.QUEUE_FLUSH, null);
+            String toSpeak = new String(response.replace("SAY ", ""));
+            HashMap<String, String> hashTts = new HashMap<String, String>();
+            hashTts.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "id");
+            textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, hashTts);
+            isSpeaking = true;
             Log.d(LOG_TAG, "I say");
         } else if (resUpper.contains("LISTEN")) {
             if (isRecording == false) {
@@ -141,5 +168,4 @@ public class HTTPPullService extends Service {
         Log.d(LOG_TAG, "End Service");
         isRunning = false;
     }
-
 }

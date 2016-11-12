@@ -12,6 +12,7 @@
     android:background="@android:color/background_light">
 
     <Switch
+        android:text="On/Off Service "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -19,49 +20,93 @@
         android:layout_alignParentStart="true"
         android:id="@+id/onOff" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/editAdress"
-        android:hint="url"
-        android:text=""
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/onOff"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp">
 
-    <TextView
-        android:text="URL:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:layout_alignBaseline="@+id/editAdress"
-        android:layout_alignBottom="@+id/editAdress"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-    <TextView
-        android:text="Repeat(sec):"
-        android:layout_width="wrap_content"
-        android:layout_alignBottom="@+id/editSec"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView2"
-        android:textSize="18sp"
-        android:layout_height="65px" />
+            <TextView
+                android:text="URL:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"/>
 
-    <EditText
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editSec"
-        android:hint="sleep(sec)"
-        android:layout_width="200px"
-        android:text="1"
-        android:layout_below="@+id/editAdress"
-        android:layout_toRightOf="@+id/textView2"
-        android:layout_toEndOf="@+id/textView2" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/editAdress"
+                android:hint="url"
+                android:text=""
+                android:layout_marginTop="10dp"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="Repeat(sec):"
+                android:layout_width="wrap_content"
+                android:id="@+id/textView2"
+                android:textSize="18sp"
+                android:layout_height="65px" />
+
+            <EditText
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/editSec"
+                android:hint="sleep(sec)"
+                android:layout_width="200px"
+                android:text="1"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="Speechkit token:"
+                android:layout_width="wrap_content"
+                android:id="@+id/textViewToken"
+                android:textSize="18sp"
+                android:layout_height="65px" />
+
+            <EditText
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/editToken"
+                android:hint="token"
+                android:layout_width="200px"
+                android:text=""
+                android:inputType="text" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="Speak block:"
+                android:layout_width="wrap_content"
+                android:id="@+id/textViewOnOff"
+                android:textSize="18sp"
+                android:layout_height="65px" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:id="@+id/blockingSwitcher"
+                android:gravity="center_vertical"
+                android:layout_gravity="left" />
+        </TableRow>
+
+    </TableLayout>
 
 </RelativeLayout>
