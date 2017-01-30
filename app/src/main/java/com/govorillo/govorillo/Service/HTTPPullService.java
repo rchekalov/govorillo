@@ -16,6 +16,7 @@ import java.util.Locale;
 
 public class HTTPPullService extends Service {
     private String LOG_TAG = "govorillo_debug";
+    private String LOG_TAG_STATUS = "govorillo_debug_status";
     private boolean isRunning  = false;
     private int secondsOfSleep;
     private String url = "";
@@ -24,6 +25,7 @@ public class HTTPPullService extends Service {
     public boolean isPlaying = false;
     public boolean isSpeaking = false;
     public boolean isBlocking = false;
+    public boolean isFirst = true;
 
     public HTTPPullService() {
     }
@@ -72,6 +74,7 @@ public class HTTPPullService extends Service {
             @Override
             public void onDone(String s) {
                 isSpeaking = false;
+                runCommand("LISTEN", RecognitionServiceIntent, MediaPlayerIntent);
             }
 
             @Override
@@ -85,6 +88,7 @@ public class HTTPPullService extends Service {
         if (isRunning == false) {
             isRunning = true;
             isBlocking = Singleton.getInstance().getSpeakBlocking();
+            isFirst = true;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -96,15 +100,19 @@ public class HTTPPullService extends Service {
                     }
                     if (isRunning) {
                         try {
-                            if (isSpeaking == false || isBlocking == false) {
-                                String response = SyncGet.sendGet(url);
-                                runCommand(response, RecognitionServiceIntent, MediaPlayerIntent);
-                                Log.d(LOG_TAG, response);
-                                Log.d(LOG_TAG, "get http");
+                            if (isFirst) {
+                                runCommand("LISTEN", RecognitionServiceIntent, MediaPlayerIntent);
+                                isFirst = false;
                             } else {
-                                Log.d(LOG_TAG, "speaking");
+                                if (isSpeaking == false || isBlocking == false) {
+                                    String response = SyncGet.sendGet(url);
+                                    runCommand(response, RecognitionServiceIntent, MediaPlayerIntent);
+                                    Log.d(LOG_TAG_STATUS, response);
+                                    Log.d(LOG_TAG, "get http");
+                                } else {
+                                    Log.d(LOG_TAG_STATUS, "speaking");
+                                }
                             }
-
                         } catch (Exception e) {
                             Log.d(LOG_TAG, e.toString());
                         }
@@ -122,6 +130,12 @@ public class HTTPPullService extends Service {
     public void runCommand(String response, Intent GovorilloListenerService, Intent MediaPlayerIntent) {
         String resUpper = response.toUpperCase();
         if (resUpper.contains("SAY")) {
+            if (isRecording && isBlocking) {
+                Log.d(LOG_TAG, "I stop");
+                stopService(GovorilloListenerService);
+
+                isRecording = false;
+            }
             String toSpeak = new String(response.replace("SAY ", ""));
             HashMap<String, String> hashTts = new HashMap<String, String>();
             hashTts.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "id");
@@ -135,7 +149,7 @@ public class HTTPPullService extends Service {
                 isRecording = true;
             }
         } else if (resUpper.contains("STOP")) {
-            if (isRecording) {
+            /*if (isRecording) {
                 Log.d(LOG_TAG, "I stop");
                 stopService(GovorilloListenerService);
 
@@ -146,7 +160,7 @@ public class HTTPPullService extends Service {
                 stopService(MediaPlayerIntent);
 
                 isPlaying = false;
-            }
+            }*/
         } else if (resUpper.contains("PLAY")) {
             String audio_url = response.replace("PLAY ", "");
             if (isPlaying == false) {

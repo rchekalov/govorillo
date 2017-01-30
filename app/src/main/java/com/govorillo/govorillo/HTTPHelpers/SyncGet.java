@@ -1,5 +1,7 @@
 package com.govorillo.govorillo.HTTPHelpers;
 
+import com.govorillo.govorillo.Singleton;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -11,7 +13,7 @@ public class SyncGet {
 
     public static String sendGet(String url) throws Exception {
 
-        URL obj = new URL(url + "status");
+        URL obj = new URL(url + "status?client_id=" + Singleton.getInstance().getDeviceId());
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
         con.setRequestMethod("GET");

@@ -32,18 +32,18 @@ public class AsyncPost extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... urls) {
-        sendSpeech(urls[0], urls[1]);
+    protected String doInBackground(String... params) {
+        sendSpeech(params[0]);
         return "ok";
     }
 
-    public void sendSpeech(String url, String speech) {
+    public void sendSpeech(String speech) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("speech", speech));
         params.add(new BasicNameValuePair("client_id", Singleton.getInstance().getDeviceId()));
         try {
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
+            HttpPost httpPost = new HttpPost(Singleton.getInstance().getUrl() + "listen");
             httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
             httpClient.execute(httpPost);
         } catch (UnsupportedEncodingException e) {

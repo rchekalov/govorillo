@@ -1,10 +1,8 @@
 package com.govorillo.govorillo.Recognition;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.govorillo.govorillo.HTTPHelpers.AsyncPost;
-import com.govorillo.govorillo.Singleton;
 
 import ru.yandex.speechkit.Error;
 import ru.yandex.speechkit.Recognition;
@@ -48,14 +46,13 @@ public class GovorilloListener implements RecognizerListener {
     public void onPartialResults(Recognizer recognizer, Recognition recognition, boolean b) {
         Log.d(LOG_TAG, "PartialRESULT");
         Log.d(LOG_TAG, recognition.getBestResultText());
-        AsyncTask<String, Void, String> execute = new AsyncPost(this).execute(Singleton.getInstance().getUrl()+ "listen", recognition.getBestResultText());
+        new AsyncPost(this).execute(recognition.getBestResultText());
     }
 
     @Override
     public void onRecognitionDone(Recognizer recognizer, Recognition recognition) {
         Log.d(LOG_TAG, "RESULT");
         Log.d(LOG_TAG, recognition.getBestResultText());
-        AsyncTask<String, Void, String> execute = new AsyncPost(this).execute(Singleton.getInstance().getUrl()+ "listen", recognition.getBestResultText());
     }
 
     @Override

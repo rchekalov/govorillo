@@ -11,6 +11,7 @@ import java.io.IOException;
 
 public class MediaPlayerService extends Service implements MediaPlayer.OnPreparedListener {
     MediaPlayer mediaPlayer = null;
+    private String LOG_TAG = "govorillo_debug";
 
     public MediaPlayerService() {
     }
@@ -19,7 +20,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         killMediaPlayer();

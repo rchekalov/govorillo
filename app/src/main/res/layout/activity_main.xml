@@ -33,7 +33,9 @@
                 android:text="URL:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView"/>
+                android:id="@+id/textView"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp" />
 
             <EditText
                 android:layout_width="wrap_content"
@@ -55,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:id="@+id/textView2"
                 android:textSize="18sp"
-                android:layout_height="65px" />
+                android:layout_height="wrap_content" />
 
             <EditText
                 android:layout_height="wrap_content"
@@ -64,7 +66,8 @@
                 android:id="@+id/editSec"
                 android:hint="sleep(sec)"
                 android:layout_width="200px"
-                android:text="1"/>
+                android:text="1"
+                android:textAlignment="viewEnd" />
         </TableRow>
 
         <TableRow
